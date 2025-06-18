@@ -1,0 +1,5 @@
+20240001:1:water bottle:NCCC:Nature's Spring:25:331:Available
+20240001:2:Energy Drink:NCCC:Monster:95:81:Available
+20240001:3:Face Wash:NCCC:POND'S:223:30:Available
+20240001:4:Toothpaste:NCCC:Close Up:50:300:Available
+2024002:6:bottle:NCCC:natures spring:10:450:Not Available

@@ -3,9 +3,12 @@ package tabComponents;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import utils.*;
 
-public class ProductManagerPanel extends JPanel {
+public class ProductManagerPanel extends JPanel implements PropertyChangeListener {
+    @SuppressWarnings("unused")
     private String currentUserName;
     private DefaultTableModel inventoryTableModel;
     private JTable inventoryTable;
@@ -19,6 +22,13 @@ public class ProductManagerPanel extends JPanel {
         JPanel inputPanel = createInputPanel();
         add(tablePanel);
         add(inputPanel);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("inventoryUpdated".equals(evt.getPropertyName()) || "productsFileUpdated".equals(evt.getPropertyName())) {
+            updateStockFromInventoryDetails();
+        }
     }
 
     private JPanel createTablePanel() {
@@ -36,7 +46,7 @@ public class ProductManagerPanel extends JPanel {
         inventoryTableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 4;
+                return true;
             }
         };
         loadProductsFromFile(inventoryTableModel);
@@ -252,24 +262,7 @@ public class ProductManagerPanel extends JPanel {
     }
 
     private void loadProductsFromFile(DefaultTableModel model) {
-        // 1. Read inventoryDetails.txt and sum quantities per Item ID
-        java.util.Map<String, Integer> stockMap = new java.util.HashMap<>();
-        java.io.File detailsFile = new java.io.File("database/inventoryDetails.txt");
-        if (detailsFile.exists()) {
-            try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(detailsFile))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(" : ");
-                    if (parts.length >= 3) {
-                        String itemId = parts[1].trim();
-                        int qty = 0;
-                        try { qty = Integer.parseInt(parts[2].trim()); } catch (Exception ignored) {}
-                        stockMap.put(itemId, stockMap.getOrDefault(itemId, 0) + qty);
-                    }
-                }
-            } catch (Exception ignored) {}
-        }
-        // 2. Read products.txt and display correct stock
+        // Only read products.txt and display the stock from the file
         java.io.File file = new java.io.File("database/products.txt");
         if(!file.exists()) return;
         try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
@@ -282,8 +275,8 @@ public class ProductManagerPanel extends JPanel {
                     String brand = parts[2].trim();
                     String price = parts[3].trim();
                     String markup = parts[4].trim();
-                    int qty = stockMap.getOrDefault(itemId, 0);
-                    String inStockDisplay = qty > 0 ? String.valueOf(qty) : "Out of stock";
+                    String stockStr = parts[5].trim();
+                    String inStockDisplay = (stockStr.equals("Out of stock") || stockStr.equals("0")) ? "Out of stock" : stockStr;
                     model.addRow(new Object[] { itemId, itemName, brand, price, markup, inStockDisplay });
                 }
             }
@@ -350,24 +343,7 @@ public class ProductManagerPanel extends JPanel {
     }
 
     public void updateStockFromInventoryDetails() {
-        // 1. Read inventoryDetails.txt and sum quantities per Item ID
-        java.util.Map<String, Integer> stockMap = new java.util.HashMap<>();
-        java.io.File detailsFile = new java.io.File("database/inventoryDetails.txt");
-        if (detailsFile.exists()) {
-            try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(detailsFile))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(" : ");
-                    if (parts.length >= 3) {
-                        String itemId = parts[1].trim();
-                        int qty = 0;
-                        try { qty = Integer.parseInt(parts[2].trim()); } catch (Exception ignored) {}
-                        stockMap.put(itemId, stockMap.getOrDefault(itemId, 0) + qty);
-                    }
-                }
-            } catch (Exception ignored) {}
-        }
-        // 2. Update products.txt with new stock values
+        // Only read products.txt and display the stock from the file
         java.io.File productsFile = new java.io.File("database/products.txt");
         java.util.List<String[]> products = new java.util.ArrayList<>();
         if (productsFile.exists()) {
@@ -377,26 +353,27 @@ public class ProductManagerPanel extends JPanel {
                     String[] parts = line.split(":");
                     if (parts.length == 6) {
                         String itemId = parts[0].trim();
-                        int newStock = stockMap.getOrDefault(itemId, 0);
-                        String stockStr = newStock > 0 ? String.valueOf(newStock) : "Out of stock";
-                        products.add(new String[]{parts[0].trim(), parts[1].trim(), parts[2].trim(), parts[3].trim(), parts[4].trim(), stockStr});
+                        String itemName = parts[1].trim();
+                        String brand = parts[2].trim();
+                        String price = parts[3].trim();
+                        String markup = parts[4].trim();
+                        String stockStr = parts[5].trim();
+                        String inStockDisplay = (stockStr.equals("Out of stock") || stockStr.equals("0")) ? "Out of stock" : stockStr;
+                        products.add(new String[]{itemId, itemName, brand, price, markup, inStockDisplay});
                     } else {
                         products.add(parts);
                     }
                 }
             } catch (Exception ignored) {}
         }
-        // 3. Rewrite products.txt with updated stock
-        try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(productsFile, false))) {
-            for (String[] prod : products) {
-                writer.write(String.join(":", prod));
-                writer.newLine();
-            }
-        } catch (Exception ignored) {}
-        // 4. Refresh the Product Manager table UI
+        // Refresh the Product Manager table UI
         if (inventoryTableModel != null) {
             inventoryTableModel.setRowCount(0);
-            loadProductsFromFile(inventoryTableModel);
+            for (String[] prod : products) {
+                if (prod.length == 6) {
+                    inventoryTableModel.addRow(prod);
+                }
+            }
         }
     }
 }

@@ -1,25 +1,32 @@
 import javax.swing.*;
 import java.awt.*;
 
+
+
+
 import utils.BetterButtons;
 import utils.BetterInputs;
 import utils.BetterLabels;
 import tabComponents.Tabs;
 import tabComponents.ProductManagerPanel;
+import tabComponents.SalesManagerPanel;
 import tabComponents.InventoryManagerPanel;
+import tabComponents.ReportsPanel;
 
 @SuppressWarnings("unused")
 public class MainWindow extends JFrame {
-
+    //get current logged in user
     private String currentUser = LoginWindow.currentUser;
 
     public MainWindow() {
-        setTitle("Main Window");
+        setTitle("Manager");
         setSize(1200, 600);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         ImageIcon image = new ImageIcon("art/logo.png");
+        System.out.println(image.getImageLoadStatus());
+        System.out.println(image);
         setIconImage(image.getImage());
 
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -27,10 +34,20 @@ public class MainWindow extends JFrame {
 
         ProductManagerPanel productManagerPanel = new ProductManagerPanel(currentUser);
         InventoryManagerPanel inventoryManagerPanel = new InventoryManagerPanel(currentUser);
+        SalesManagerPanel salesManagerPanel = new SalesManagerPanel(currentUser);
+        ReportsPanel reportsPanel = new ReportsPanel();
+
         inventoryManagerPanel.setProductManagerPanel(productManagerPanel);
+        // Register ProductManagerPanel as a listener for real-time updates
+        salesManagerPanel.addPropertyChangeListener(productManagerPanel);
+        inventoryManagerPanel.addPropertyChangeListener(productManagerPanel);
+        // Register SalesManagerPanel as a listener for product changes (for real-time dropdown update)
+        productManagerPanel.addPropertyChangeListener(salesManagerPanel);
 
         tabbedPane.addTab("Product Manager", productManagerPanel);
         tabbedPane.addTab("Inventory Manager", inventoryManagerPanel);
+        tabbedPane.addTab("Sales Manager", salesManagerPanel);
+        tabbedPane.addTab("Reports", reportsPanel);
 
         tabbedPane.setBackground(new Color(245, 245, 245));
         tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 15));
@@ -80,34 +97,8 @@ public class MainWindow extends JFrame {
         });
         //---------------------Design of tabs
         add(tabbedPane, BorderLayout.CENTER);
-        
+
         setVisible(true);
     }
     //button actions
 }
-
-/*
-String[] buttons = {"one", "two", "three"};
-int buttonY = 10;
-for (int i = 0; i < buttons.length; i++) {
-    final int index = i;
-    BetterButtons button = new BetterButtons(10, buttonY + (index * 30), "button" + index, buttons[index], e -> test());
-    add(button);
-}
-
-String[] textFields = {"one", "two", "three"};
-int textFieldsY = 120;
-for (int i = 0; i < textFields.length; i++) {
-    final int index = i;
-    BetterInputs textFielda = new BetterInputs(10, textFieldsY + (index * 30), textFields[index] , "");
-    add(textFielda);
-}
-
-String[] Labels = {"one", "two", "three"};
-int LabelY = 210;
-for (int i = 0; i < Labels.length; i++) {
-    final int index = i;
-    BetterLabels Label = new BetterLabels(10, LabelY + (index * 30), Labels[index]);
-    add(Label);
-}
-*/

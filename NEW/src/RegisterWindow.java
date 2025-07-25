@@ -1,4 +1,4 @@
-    import java.awt.*;
+import java.awt.*;
     import javax.swing.*;
     import java.io.*;
 
@@ -192,8 +192,9 @@
             return false;
         }
 
+        
         public void registerHandler() {
-            String username = registerUsernameField.getText();
+            String username = registerUsernameField.getText().trim();
             String password = new String(registerPasswordField.getPassword());
             String empId = empIdField.getText();
             String name = nameField.getText();

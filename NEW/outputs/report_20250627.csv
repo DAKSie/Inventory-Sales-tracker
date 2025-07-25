@@ -1,0 +1,26 @@
+--- Products Summary ---
+Item ID,Item Name,Price,Stock
+1,Lucky Day Coffee,24.00,475
+2,Water Bottle,25.00,510
+3,Crackers,25.00,178
+4,Shabu,100.00,9936
+
+--- Inventory Summary ---
+OR Number,Date,User,Supplier,Total
+2025001 , 2025-06-26 , rico16 , NCCC , 36500.00
+69420 , 2025-06-27 , Kient  , Rico , 1000000.00
+
+--- Inventory Details Summary ---
+Inventory ID,Item ID,Quantity,Unit Price,Total Price
+2025001,1,500,23.00,11500.00
+2025001,2,500,25.00,12500.00
+2025001,3,500,25.00,12500.00
+69420,4,10000,100.00,1000000.00
+
+--- Sales Summary ---
+Sales ID,Item ID,Item Name,Price,Quantity,Total,User
+S2606202511,1,Lucky Day Coffee,26.40,25,660.00,rico16
+S2606202521,2,Water Bottle,31.25,10,312.50,rico16
+S2606202531,3,Crackers,27.50,342,9405.00,rico16
+S2706202541,4,Shabu,125.00,64,8000.00,Kient 
+

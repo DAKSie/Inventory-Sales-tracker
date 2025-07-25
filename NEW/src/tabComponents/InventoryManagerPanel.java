@@ -32,7 +32,7 @@ public class InventoryManagerPanel extends JPanel {
         DefaultTableModel inventoryTableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return true;
             }
         };
         JTable inventoryTable = new JTable(inventoryTableModel) {
@@ -216,6 +216,41 @@ public class InventoryManagerPanel extends JPanel {
             String date = java.time.LocalDate.now().toString();
             String user = currentUserName;
             inventoryTableModel.addRow(new Object[]{orNumber, itemId, itemName, supplier, quantity, price, date, user});
+            // --- Update products.txt stock ---
+            if (itemId != null && !itemId.isEmpty() && quantity != null && !quantity.isEmpty()) {
+                try {
+                    int addQty = Integer.parseInt(quantity);
+                    java.io.File productsFile = new java.io.File("database/products.txt");
+                    java.util.List<String> lines = new java.util.ArrayList<>();
+                    if (productsFile.exists()) {
+                        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(productsFile))) {
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                String[] parts = line.split(":");
+                                if (parts.length == 6 && parts[0].trim().equals(itemId)) {
+                                    int oldStock = 0;
+                                    try { oldStock = Integer.parseInt(parts[5].trim()); } catch (Exception ignored) {}
+                                    int newStock = oldStock + addQty;
+                                    parts[5] = String.valueOf(newStock);
+                                    lines.add(String.join(":", parts));
+                                } else {
+                                    lines.add(line);
+                                }
+                            }
+                        }
+                        try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(productsFile, false))) {
+                            for (String l : lines) {
+                                writer.write(l);
+                                writer.newLine();
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                // Fire property change for real-time update
+                firePropertyChange("inventoryUpdated", false, true);
+            }
         });
         clearButton.addActionListener(e -> {
             ((JTextField)orInput).setText("");

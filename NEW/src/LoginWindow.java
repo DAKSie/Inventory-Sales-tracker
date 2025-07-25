@@ -74,7 +74,7 @@ public class LoginWindow extends JFrame{
         add(loginPasswordField);
 
         // Login Button (rounded, blue gradient, shadow, bold font)
-        loginLoginButton = new JButton("Sign In");
+        loginLoginButton = new JButton("Log in");
         loginLoginButton.setBounds(50, 195, 270, 38);
         loginLoginButton.setFont(new java.awt.Font("San Francisco", java.awt.Font.BOLD, 17));
         loginLoginButton.setBackground(new Color(0, 122, 255));
@@ -112,13 +112,15 @@ public class LoginWindow extends JFrame{
     }
 
     
-
+    
     public void loginHandler() {
         String username = loginUsernameField.getText();
         String password = new String(loginPasswordField.getPassword());
         currentUser = username;
-
+        
         System.out.println(username + " " + password);
+        loginUsernameField.setText(username);
+        loginPasswordField.setText("");
         
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill in both fields.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -150,7 +152,5 @@ public class LoginWindow extends JFrame{
             return;
         }
 
-        loginUsernameField.setText(username);
-        loginPasswordField.setText(password);
     }
 }

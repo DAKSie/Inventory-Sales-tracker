@@ -2,9 +2,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class reference extends JFrame {
+public class Reference extends JFrame {
 
-    public reference() {
+    public Reference() {
         //------------------------------------setup
         setTitle("Manager");
         setSize(1200, 1000);

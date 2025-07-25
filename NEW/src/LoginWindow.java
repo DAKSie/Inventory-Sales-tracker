@@ -3,6 +3,8 @@ import java.io.*;
 import javax.swing.*;
 
 public class LoginWindow extends JFrame{
+    public static String currentUser;
+
     private JTextField loginUsernameField;
     private JPasswordField loginPasswordField;
     private JButton loginLoginButton;
@@ -20,7 +22,7 @@ public class LoginWindow extends JFrame{
         getContentPane().setBackground(new Color(242, 242, 247));
 
         // Application Logo (centered, circular, subtle shadow)
-        ImageIcon image = new ImageIcon("art/inventory-sales.png");
+        ImageIcon image = new ImageIcon("art/logo.png");
         setIconImage(image.getImage());
         JLabel logoLabel = new JLabel();
         logoLabel.setIcon(new ImageIcon(image.getImage().getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH)));
@@ -109,9 +111,12 @@ public class LoginWindow extends JFrame{
         this.dispose();
     }
 
+    
+
     public void loginHandler() {
         String username = loginUsernameField.getText();
         String password = new String(loginPasswordField.getPassword());
+        currentUser = username;
 
         System.out.println(username + " " + password);
         
@@ -138,7 +143,7 @@ public class LoginWindow extends JFrame{
 
         if (userFound) {
             JOptionPane.showMessageDialog(this, "Login successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            new MainDashboard(); // Open the main dashboard
+            new MainWindow(); // Open the main dashboard
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);

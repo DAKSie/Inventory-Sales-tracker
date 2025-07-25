@@ -1,0 +1,5 @@
+1:Water Bottle:Nature's Spring:25.00:10%:320
+2:Energy Drink:Monster Original:95.00:10%:15
+3:Sardines:Youngstown:19.00:10%:220
+4:Soda:Coca Cola:20.00:20%:400
+5:Soda:Pepsi:25.00:15%:400

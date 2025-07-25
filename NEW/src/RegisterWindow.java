@@ -23,7 +23,7 @@
             setLocationRelativeTo(null);
 
             // Application Logo (centered)
-            ImageIcon originalIcon = new ImageIcon("art/inventory-sales.png");
+            ImageIcon originalIcon = new ImageIcon("art/logo.png");
             Image scaledImage = originalIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(scaledImage);
             setIconImage(originalIcon.getImage());

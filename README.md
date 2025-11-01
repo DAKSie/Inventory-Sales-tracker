@@ -1,7 +1,6 @@
 ## Getting started
 just
-```
-bash
+```bash
 run
 ```
 in the terminal bro <3

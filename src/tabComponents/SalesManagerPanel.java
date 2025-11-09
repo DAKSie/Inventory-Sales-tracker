@@ -1,7 +1,5 @@
 package tabComponents;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -9,11 +7,10 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import utils.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import utils.*;
 
 public class SalesManagerPanel extends JPanel implements PropertyChangeListener {
     private String currentUserName;

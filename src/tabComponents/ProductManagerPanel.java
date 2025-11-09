@@ -1,10 +1,10 @@
 package tabComponents;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import utils.*;
 
 public class ProductManagerPanel extends JPanel implements PropertyChangeListener {
